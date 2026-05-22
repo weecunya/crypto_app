@@ -1,0 +1,11 @@
+pip~=26.0.1
+attrs~=26.1.0
+distro~=1.9.0
+protobuf~=7.34.1
+Django~=6.0.5
+asgiref~=3.11.1
+sqlparse~=0.5.5
+pytest~=9.0.3
+requests~=2.33.1
+python-dotenv~=1.2.2
+PyJWT~=2.12.1
