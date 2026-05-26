@@ -1,6 +1,5 @@
 
 # Create your views here.
-import hashlib
 import jwt
 import datetime
 from django.conf import settings
@@ -8,38 +7,10 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 import json
-
 from myproject.settings import JWT_EXPIRATION_SECONDS
-from .models import Role,User,UserRole,Permission,Resource
-
-
-def hash_password(password):
-    return hashlib.pbkdf2_hmac('sha256',password.encode(),b'salt',100000).hex()
-
-def check_password(password,password_hash):
-    return hash_password(password) == password_hash
-
-
-def has_permission(user, resource_name, operation):
-    if user is None:
-        return False
-    print(resource_name, operation)
-    print(user,user.first_name,user.last_name)
-    user_roles = UserRole.objects.filter(user=user).values_list('role', flat=True)
-    for role_id in user_roles:
-        try:
-            resource = Resource.objects.get(name=resource_name)
-            perm = Permission.objects.get(role=role_id, resource=resource)
-            if operation == 'read' and perm.can_read:
-                return True
-            if operation == 'write' and perm.can_write:
-                return True
-            if operation == 'delete' and perm.can_delete:
-                return True
-        except (Resource.DoesNotExist, Permission.DoesNotExist):
-            continue
-        return False
-
+from .decorators import permission_required
+from .models import Role,User,UserRole
+from .services import hash_password,check_password
 
 
 
@@ -143,21 +114,18 @@ MOCK_PROJECTS = [
 
 
 @require_http_methods(['GET'])
+@permission_required('project_list', 'read')
 def projects_list(request):
     if not request.user:
         return JsonResponse({'error':'user does not exist'}, status=401)
-    if not has_permission(request.user,'project_list', "read"): #read
-        return JsonResponse({'error':'user does not have permission'}, status=401)
     return JsonResponse({"projects": MOCK_PROJECTS})
 
 @csrf_exempt
 @require_http_methods(['POST'])
+@permission_required('project_list',"write")
 def create_project(request):
     if not request.user:
         return JsonResponse({'error':'user does not exist'}, status=401)
-    print(has_permission(request.user,'project_list',"write"))
-    if not has_permission(request.user,'project_list',"write"): #write
-        return JsonResponse({'error':'user does not have permission'}, status=403)
     try:
         data = json.loads(request.body)
     except json.JSONDecodeError:
@@ -171,11 +139,10 @@ def create_project(request):
 
 @csrf_exempt
 @require_http_methods(['DELETE'])
+@permission_required('project_list','delete')
 def delete_project(request,project_id):
     if not request.user:
         return JsonResponse({'error':'user does not exist'}, status=401)
-    if not has_permission(request.user,'project_list',"delete"):  #delete
-        return JsonResponse({'error':'user does not have permission'}, status=403)
     project_to_delete = None
     for p in MOCK_PROJECTS:
         if p['id'] == project_id:
@@ -187,13 +154,12 @@ def delete_project(request,project_id):
     return JsonResponse({'success':'project deleted'})
 
 @require_http_methods(['GET'])
+@permission_required('user_permissions','read')
 def admin_users_list(request):
     if not request.user:
         return JsonResponse({"error":"user does not exist"}, status=401)
     if not request.user.is_active:
         return JsonResponse({"error":"user is deleted"}, status=401)
-    if not has_permission(request.user,'project_list',"read"): #read
-        return JsonResponse({"error":"user does not have permission"}, status=403)
     users = list(User.objects.all().values('id','email','first_name','last_name','is_active'))
     if not users:
         return JsonResponse({"status":"no users yet"}, status=200)
@@ -201,11 +167,10 @@ def admin_users_list(request):
 
 @csrf_exempt
 @require_http_methods(['PUT'])
+@permission_required('user_permissions',"write")
 def admin_change_role(request, user_id):
     if not request.user:
         return JsonResponse({"error":"user does not exist"}, status=401)
-    if not has_permission(request.user,'project_list',"write"): #write
-        return JsonResponse({"error":"user does not have permission"}, status=403)
     try:
         data = json.loads(request.body)
     except json.JSONDecodeError:

@@ -1,15 +1,14 @@
 import os
 import django
-import hashlib
-
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'myproject.settings')
 django.setup()
 
-from auth_app.models import User, Role, Resource, Permission, UserRole
+from auth_app.services import hash_password
 
-def hash_password(password):
-    return hashlib.pbkdf2_hmac('sha256', password.encode(), b'salt', 100000).hex()
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'myproject.settings')
+django.setup()
+from auth_app.models import User, Role, Resource, Permission, UserRole
 
 
 admin_role, _ = Role.objects.get_or_create(name='admin')
@@ -19,6 +18,20 @@ print("roles created")
 for res_name in ['profile', 'project_list', 'user_permissions']:
     Resource.objects.get_or_create(name=res_name)
 print("resources created")
+
+user_perm = Resource.objects.get(name='user_permissions')
+Permission.objects.get_or_create(
+    role=user_role,
+    resource=user_perm,
+    defaults={'can_read': False, 'can_write': False, 'can_delete': False}
+)
+Permission.objects.get_or_create(
+    role=admin_role,
+    resource=user_perm,
+    defaults={'can_read': True, 'can_write': True, 'can_delete': True}
+)
+print("permissions created")
+
 
 project_res = Resource.objects.get(name='project_list')
 Permission.objects.get_or_create(

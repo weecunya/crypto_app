@@ -1,21 +1,12 @@
-import pytest
-# import os
-# from dotenv import load_dotenv
-#
-#
-#
-# load_dotenv()
-#
-# BASE_URL = os.getenv('BASE_URL')
+
 from myproject.settings import BASE_URL
 
 
-import os
 import pytest
-from dotenv import load_dotenv, find_dotenv
-from pathlib import Path
+
 
 #Поменяйте по необходимости, кроме этого файла значение переменной нигде не присваивается
+
 BASE_URL = 'http://127.0.0.1:8000/api'
 
 
