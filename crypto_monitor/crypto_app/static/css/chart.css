@@ -1,0 +1,50 @@
+/* Общий фон страницы */
+body {
+    background: #0a0a0a;
+    margin: 0;
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Карточка графика */
+.chart-card {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: #0d0d0d;
+    border: 1px solid #f5c518;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(245, 197, 24, 0.1);
+}
+
+/* Заголовок */
+.chart-card h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    letter-spacing: 1px;
+}
+
+/* Контейнер для графика */
+.chart-container {
+    height: 350px;
+    width: 100%;
+    background: #111;
+    border-radius: 12px;
+    padding: 10px;
+}
+
+/* Ссылка назад */
+.back-link {
+    display: block;
+    text-align: center;
+    margin-top: 25px;
+    color: #f5c518;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+    color: #ffd700;
+}

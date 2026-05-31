@@ -1,0 +1,45 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: crypto_redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    networks:
+      - crypto_network
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    environment:
+      - REDIS_URL=redis://crypto_redis:6379
+    networks:
+      - crypto_network
+    command: python manage.py runserver 0.0.0.0:8000
+    working_dir: /app
+
+  worker:
+    build: .
+    depends_on:
+      - redis
+    environment:
+      - REDIS_URL=redis://crypto_redis:6379
+    networks:
+      - crypto_network
+    command: celery -A crypto_project worker --loglevel=info -P eventlet
+
+  beat:
+    build: .
+    depends_on:
+      - redis
+    environment:
+      - REDIS_URL=redis://crypto_redis:6379
+    networks:
+      - crypto_network
+    command: celery -A crypto_project beat loglevel=info
+
+networks:
+   crypto_network:
+     driver: bridge

@@ -1,0 +1,80 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>История цен {{ symbol }}</title>
+    <style>
+        body {
+            background: #0a0a0a;
+            font-family: Arial, sans-serif;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #0d0d0d;
+            border-radius: 16px;
+            border: 1px solid #2563eb;
+            padding: 20px;
+        }
+        h2 {
+            color: #2563eb;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #222;
+        }
+        th {
+            color: #2563eb;
+        }
+        td {
+            color: #ccc;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #2563eb;
+            text-decoration: none;
+        }
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>История цен {{ symbol }}</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Время</th>
+                <th>Цена (USDT)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for price in prices %}
+            <tr>
+                <td>{{ price.timestamp|date:"d.m.Y H:i:s" }}</td>
+                <td>{{ price.price|floatformat:2 }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2" class="empty">Нет данных</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'profile' %}" class="back-link">← Назад в профиль</a>
+</div>
+</body>
+</html>

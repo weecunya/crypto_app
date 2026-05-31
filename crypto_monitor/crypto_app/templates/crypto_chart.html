@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>График </title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{% static 'css/chart.css' %}">
+</head>
+<body>
+<div class="card" style="max-width: 1400px;">
+    <div style= "max-height: 500px;">
+    <h2 style="color: #2563eb;">График цены {{ symbol }}</h2>
+    <canvas id="btcChart" width="10" height="10"></canvas>
+    <p style="text-align: center; margin-top: 20px;">
+        <a href="{% url 'profile' %}">← Назад в профиль</a>
+    </p>
+    </div>
+</div>
+
+
+<script>
+    fetch('/api-history/?symbol={{ symbol }}')
+        .then(response => response.json())
+        .then(data => {
+            const ctx = document.getElementById('btcChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Цена',
+                        data: data.prices,
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            title: {
+                                display: true,
+                                text: 'Цена (USDT)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Время'
+                            }
+                        }
+                    }
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Ошибка загрузки данных:', error);
+            document.getElementById('btcChart').insertAdjacentHTML('afterend',
+                '<p style="color: red; text-align: center;">Ошибка загрузки данных графика</p>');
+        });
+</script>
+</body>
+</html>

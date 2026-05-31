@@ -1,0 +1,125 @@
+/* Полный сброс внешних отступов, чтобы ничего никуда не двигалось */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #0a0a0a; /* Серый фон */
+    font-family: Tahoma, Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Главный белый блок (карточка) в центре */
+.container, .card {
+    width: 420px;
+    background: white;
+    padding: 25px 30px 35px 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    text-align: left;
+}
+
+/* Заголовок */
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    margin-right: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+/* Каждая строчка формы */
+p {
+    margin-bottom: 12px;
+}
+
+/* Поля ввода */
+input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #aaa;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+/* Кнопка */
+button {
+    width: 100%;
+    padding: 10px;
+    background: #2c7da0;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+button:hover {
+    background: #1f5e7a;
+}
+
+/* Сообщения об ошибках */
+.errorlist {
+    color: #a00;
+    list-style: none;
+    margin-bottom: 10px;
+    font-size: 13px;
+}
+
+/* Текст-помощник под полями */
+.helptext {
+    display: block;
+    font-size: 11px;
+    color: #666;
+    margin-top: 3px;
+}
+
+/* Ссылки внизу */
+.link-bottom {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 13px;
+}
+
+a {
+    color: #2c7da0;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Стиль для страницы профиля */
+.profile-info {
+    background: #f4f4f4;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.profile-info p {
+    margin: 8px 0;
+}
+
+.form-footer p{
+    text-align: center;
+    margin-top:20px;
+}
+
+.form-link a{
+    margin-left: 10px;
+}
+
+.form-title h2{
+    margin-left: 40px;
+    margin-right: 5px;
+    color: rgb(255,255,255);
+}
