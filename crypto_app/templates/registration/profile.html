@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+<head>
+    <link rel="stylesheet" href="{% static 'css/registration.css' %}">
+    <title>Профиль</title>
+</head>
+<body style="background: #0a0a0a; color: rgb(255,255,255);">
+    <h2 style="margin: 30px; color: rgb(37,99,235);">Профиль</h2>
+    <div style="margin: 50px;padding: 30px;border-radius: 20px; background: rgb(37,99,235);">
+    <p>Имя пользователя: {{ user.username }}</p>
+    <p>Email: {{ user.email }}</p>
+    <p>Имя: {{ user.first_name }} {{ user.last_name }}</p>
+    <a href="{% url 'logout' %}" style="color: black;">Выйти</a>
+    </div>
+<div>
+    <button id="chart" style="padding:20px;margin:20px;background:#0a0a0a;">График</button>
+    <button id="history" style="padding:20px;margin:20px;background:#0a0a0a;">История цен</button>
+
+</div>
+<div class="cryptoSelect" style="padding: 20px; margin:15px; background: rgb(37,99,235); border-radius:15px;">
+    <label for="cryptoSelect">Choose the crypto</label>
+    <select id="cryptoSelect" style=" color: rgb(255,255,255); background: #0a0a0a;" >
+        <option value="BTCUSDT">Bitcoin
+        <option value="ETHUSDT">Ethereum</option>
+        <option value="SOLUSDT">Solana</option>
+        <option value="XRPUSDT">XRP</option>
+        <option value="DOGEUSDT">Dogecoin</option>
+    </select>
+</div>
+<script>
+    document.getElementById('chart').onclick = function() {
+    const symbol = document.getElementById('cryptoSelect').value;
+    window.location.href = '/chart/?symbol=' + symbol;};
+
+    document.getElementById('history').onclick = function() {
+    const symbol = document.getElementById('cryptoSelect').value;
+    window.location.href = '/crypto-history/?symbol=' + symbol;};
+</script>
+</body>
+</html>
